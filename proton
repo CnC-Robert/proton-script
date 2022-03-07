@@ -112,6 +112,7 @@ else
         echo "Using $CONF"
     fi
 fi
+
  . "$CONF"
 
 check_1_0 DXVK $DXVK
