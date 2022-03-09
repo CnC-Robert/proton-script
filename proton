@@ -13,11 +13,16 @@ check_empty () {
     if [ -z "$2" ]; then echo "  [\e[1;33mW\e[0m]\e[1;33m Variable $1 is empty\e[0m"; fi
 }
 
+#if [ -z "$1" ]; then
+#    echo
+#    echo "  [\e[1;31mE\e[0m]\e[1;31m No command supplied\e[0m"
+#    echo
+#    exit
+#fi
+
 if [ -z "$1" ]; then
     echo
-    echo "  [\e[1;31mE\e[0m]\e[1;31m No command supplied\e[0m"
-    echo
-    exit
+    echo "  [\e[1;33mW\e[0m]\e[1;33m No command supplied\e[0m"
 fi
 
 if [ -d "$1" ]; then
@@ -34,24 +39,29 @@ FILE=$(readlink -f "$1")
 FOLDER=$(dirname "$FILE")
 #COMPATDIR=$(basename "$FOLDER")
 
-ENV_DXVK=$DXVK
-ENV_MANGOHUD=$MANGOHUD
-ENV_GAMEMODE=$GAMEMODE
-ENV_ESYNC=$ESYNC
-ENV_FSYNC=$FSYNC
-ENV_COMPATDIR=$COMPATDIR
-ENV_VERSION=$VERSION
+ENV_DXVK="$DXVK"
+ENV_MANGOHUD="$MANGOHUD"
+ENV_GAMEMODE="$GAMEMODE"
+ENV_ESYNC="$ESYNC"
+ENV_FSYNC="$FSYNC"
+ENV_D3D10="$D3D10"
+ENV_D3D11="$D3D11"
+ENV_COMPATDIR="$COMPATDIR"
+ENV_VERSION="$VERSION"
 
-check_1_0 DXVK $DXVK
+check_1_0 "DXVK" "$DXVK"
 if [ ! -z "$MANGOHUD" ]; then if [ "$MANGOHUD" != "0" ] && [ "$MANGOHUD" != "1" ] && [ "$MANGOHUD" != "2" ]; then echo; echo "  [\e[1;31mE\e[0m]\e[1;31m Variable MANGOHUD is not 0, 1 or 2\e[0m"; echo; exit; fi; fi
 #check_1_0 MANGOHUD $MANGOHUD
-check_1_0 GAMEMODE $GAMEMODE
-check_1_0 ESYNC $ESYNC
-check_1_0 FSYNC $FSYNC
+check_1_0 "GAMEMODE" "$GAMEMODE"
+check_1_0 "ESYNC" "$ESYNC"
+check_1_0 "FSYNC" "$FSYNC"
+check_1_0 "D3D10" "$D3D10"
+check_1_0 "D3D11" "$D3D11"
 
 #mkdir -p "$PROTONDIR" &> /dev/null
 mkdir -p "$COMPDIR" &> /dev/null
 
+#  1 $CONF variable
 #  1 exe-folder/proton.conf
 #  2 exe-folder/.proton.conf
 #  3 ~/proton.conf
@@ -115,25 +125,31 @@ fi
 
  . "$CONF"
 
-check_1_0 DXVK $DXVK
+check_1_0 "DXVK" "$DXVK"
 if [ ! -z "$MANGOHUD" ]; then if [ "$MANGOHUD" != "0" ] && [ "$MANGOHUD" != "1" ] && [ "$MANGOHUD" != "2" ]; then echo; echo "  [\e[1;31mE\e[0m]\e[1;31m Variable MANGOHUD is not 0, 1 or 2\e[0m"; echo; exit; fi; fi
 #check_1_0 MANGOHUD $MANGOHUD
-check_1_0 GAMEMODE $GAMEMODE
-check_1_0 ESYNC $ESYNC
-check_1_0 FSYNC $FSYNC
+check_1_0 "GAMEMODE $GAMEMODE"
+check_1_0 "ESYNC" "$ESYNC"
+check_1_0 "FSYNC" "$FSYNC"
+check_1_0 "D3D10" "$D3D10"
+check_1_0 "D3D11" "$D3D11"
 
-check_empty DXVK $DXVK
-check_empty MANGOHUD $MANGOHUD
-check_empty GAMEMODE $GAMEMODE
-check_empty ESYNC $ESYNC
-check_empty FSYNC $FSYNC
-check_empty VERSION $VERSION
+check_empty "DXVK" "$DXVK"
+check_empty "MANGOHUD" "$MANGOHUD"
+check_empty "GAMEMODE" "$GAMEMODE"
+check_empty "ESYNC" "$ESYNC"
+check_empty "FSYNC" "$FSYNC"
+check_empty "VERSION" "$VERSION"
+check_empty "D3D10" "$D3D10"
+check_empty "D3D11" "$D3D11"
 
 if [ ! -z "$ENV_DXVK" ]; then DXVK=$ENV_DXVK; fi
 if [ ! -z "$ENV_MANGOHUD" ]; then MANGOHUD=$ENV_MANGOHUD; fi
 if [ ! -z "$ENV_GAMEMODE" ]; then GAMEMODE=$ENV_GAMEMODE; fi
 if [ ! -z "$ENV_ESYNC" ]; then ESYNC=$ENV_ESYNC; fi
 if [ ! -z "$ENV_FSYNC" ]; then FSYNC=$ENV_FSYNC; fi
+if [ ! -z "$ENV_D3D10" ]; then D3D10=$ENV_D3D10; fi
+if [ ! -z "$ENV_D3D11" ]; then D3D11=$ENV_D3D11; fi
 if [ ! -z "$ENV_COMPATDIR" ]; then COMPATDIR=$ENV_COMPATDIR; fi
 if [ ! -z "$ENV_VERSION" ]; then VERSION=$ENV_VERSION; fi
 
@@ -154,6 +170,10 @@ if [ ! "$DXVK" = "0" ]; then echo "Using DXVK"; else echo "Using WineD3D"; fi
 if [ "$MANGOHUD" = "1" ]; then echo "Using MangoHud"; fi
 if [ "$MANGOHUD" = "2" ]; then echo "Using MangoHud (OpenGL)"; fi
 if [ ! "$GAMEMODE" = "0" ]; then echo "Enabling GameMode"; fi
+if [ "$ESYNC" = "0" ]; then echo "Disabling Esync"; fi
+if [ "$FSYNC" = "0" ]; then echo "Disabling Fsync"; fi
+if [ "$D3D10" = "0" ]; then echo "Disabling Direct3D 10"; fi
+if [ "$D3D11" = "0" ]; then echo "Disabling Direct3D 11"; fi
 if [ "$COMPATDIR" = "Default" ]; then echo "Using default compat dir"; else echo "Using compat dir $COMPATDIR"; fi
 echo
 
@@ -161,7 +181,6 @@ if [ -e "$1" ]; then
     cd "$FOLDER"
 fi
 
-STEAM_COMPAT_DATA_PATH="$COMPDIR/$COMPATDIR" STEAM_COMPAT_CLIENT_INSTALL_PATH="$COMPDIR" $(if [ "$DXVK" = "0" ]; then echo "env PROTON_USE_WINED3D=1"; fi) $(if [ ! "$GAMEMODE" = "0" ]; then echo "gamemoderun"; fi) $(if [ "$MANGOHUD" = "1" ]; then echo "mangohud"; fi) $(if [ "$MANGOHUD" = "2" ]; then echo "mangohud --dlsym"; fi) "$PROTONDIR$VERSION/proton" run "$(if [ -e "$1" ]; then echo "$FILE" "${@#$1}"; else echo "$@"; fi)"
-
+env STEAM_COMPAT_DATA_PATH="$COMPDIR/$COMPATDIR" env STEAM_COMPAT_CLIENT_INSTALL_PATH="$COMPDIR" $(if [ "$DXVK" = "0" ]; then echo "env PROTON_USE_WINED3D=1"; fi) $(if [ "$D3D10" = "0" ]; then echo "env PROTON_NO_D3D10=1"; fi) $(if [ "$D3D11" = "0" ]; then echo "env PROTON_NO_D3D11=1"; fi) $(if [ "$FSYNC" = "0" ]; then echo "env PROTON_NO_FSYNC=1"; fi) $(if [ "$ESYNC" = "0" ]; then echo "env PROTON_NO_ESYNC=1"; fi) $(if [ ! "$GAMEMODE" = "0" ]; then echo "gamemoderun"; fi) $(if [ "$MANGOHUD" = "1" ]; then echo "mangohud"; fi) $(if [ "$MANGOHUD" = "2" ]; then echo "mangohud --dlsym"; fi) "$PROTONDIR$VERSION/proton" run "$(if [ -e "$1" ]; then echo "$FILE" "${@#$1}"; else echo "$@"; fi)"
 
 
