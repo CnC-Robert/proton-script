@@ -62,12 +62,12 @@ check_1_0 "D3D11" "$D3D11"
 mkdir -p "$COMPDIR" &> /dev/null
 
 #  1 $CONF variable
-#  1 exe-folder/proton.conf
-#  2 exe-folder/.proton.conf
-#  3 ~/proton.conf
-#  4 ~/.proton.conf
-#  5 ~/.config/proton.conf     (default)  ($DEFAULTCONF)
-#  6 ~/.config/.proton.conf
+#  2 exe-folder/proton.conf
+#  3 exe-folder/.proton.conf
+#  4 ~/proton.conf
+#  5 ~/.proton.conf
+#  6 ~/.config/proton.conf     (default)  ($DEFAULTCONF)
+#  7 ~/.config/.proton.conf
 
 if [ -z "$CONF" ]; then
     if [ -e "$FOLDER/proton.conf" ]; then
@@ -102,7 +102,7 @@ if [ -z "$CONF" ]; then
                         else
                             echo
                             echo "Creating new proton config"
-                            printf "DXVK=1\n\nMANGOHUD=1\n\nGAMEMODE=1\n\nESYNC=1\n\nFSYNC=1\n\nVERSION=$DEFAULTVERSION\n\nCOMPATDIR=Default" > "$DEFAULTCONF"
+                            printf "VERSION=$DEFAULTVERSION\n\nCOMPATDIR=Default\n\n\n#0 disabled, 1 enabled, 2 opengl\nMANGOHUD=0\n\nGAMEMODE=0\n\n\nDXVK=1\n\nESYNC=1\n\nFSYNC=1\n\nD3D11=1\n\nD3D10=1" > "$DEFAULTCONF"
                             echo "Using default $DEFAULTCONF"
                             CONF="$DEFAULTCONF"
                         fi
@@ -115,7 +115,7 @@ else
     if [ ! -e "$CONF" ]; then
         echo
         echo "Creating new proton config"
-        printf "DXVK=1\n\nMANGOHUD=1\n\nGAMEMODE=1\n\nESYNC=1\n\nFSYNC=1\n\nVERSION=$DEFAULTVERSION\n\nCOMPATDIR=Default" > "$CONF"
+        printf "VERSION=$DEFAULTVERSION\n\nCOMPATDIR=Default\n\n\n#0 disabled, 1 enabled, 2 opengl\nMANGOHUD=0\n\nGAMEMODE=0\n\n\nDXVK=1\n\nESYNC=1\n\nFSYNC=1\n\nD3D11=1\n\nD3D10=1" > "$CONF"
         echo "Using $CONF"
     else
         echo
