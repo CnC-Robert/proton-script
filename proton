@@ -178,9 +178,13 @@ if [ "$COMPATDIR" = "Default" ]; then echo "Using default compat dir"; else echo
 echo
 
 if [ -e "$1" ]; then
+    ISPATH="1"
     cd "$FOLDER"
 fi
 
-env STEAM_COMPAT_DATA_PATH="$COMPDIR/$COMPATDIR" env STEAM_COMPAT_CLIENT_INSTALL_PATH="$COMPDIR" $(if [ "$DXVK" = "0" ]; then echo "env PROTON_USE_WINED3D=1"; fi) $(if [ "$D3D10" = "0" ]; then echo "env PROTON_NO_D3D10=1"; fi) $(if [ "$D3D11" = "0" ]; then echo "env PROTON_NO_D3D11=1"; fi) $(if [ "$FSYNC" = "0" ]; then echo "env PROTON_NO_FSYNC=1"; fi) $(if [ "$ESYNC" = "0" ]; then echo "env PROTON_NO_ESYNC=1"; fi) $(if [ ! "$GAMEMODE" = "0" ]; then echo "gamemoderun"; fi) $(if [ "$MANGOHUD" = "1" ]; then echo "mangohud"; fi) $(if [ "$MANGOHUD" = "2" ]; then echo "mangohud --dlsym"; fi) "$PROTONDIR$VERSION/proton" run "$(if [ -e "$1" ]; then echo "$FILE" "${@#$1}"; else echo "$@"; fi)"
+#echo "Copyable command:"
+#echo env STEAM_COMPAT_DATA_PATH="\"$COMPDIR/$COMPATDIR\"" env STEAM_COMPAT_CLIENT_INSTALL_PATH="\"$COMPDIR\"" $(if [ "$DXVK" = "0" ]; then echo "env PROTON_USE_WINED3D=1"; fi) $(if [ "$D3D10" = "0" ]; then echo "env PROTON_NO_D3D10=1"; fi) $(if [ "$D3D11" = "0" ]; then echo "env PROTON_NO_D3D11=1"; fi) $(if [ "$FSYNC" = "0" ]; then echo "env PROTON_NO_FSYNC=1"; fi) $(if [ "$ESYNC" = "0" ]; then echo "env PROTON_NO_ESYNC=1"; fi) $(if [ ! "$GAMEMODE" = "0" ]; then echo "gamemoderun"; fi) $(if [ "$MANGOHUD" = "1" ]; then echo "mangohud"; fi) $(if [ "$MANGOHUD" = "2" ]; then echo "mangohud --dlsym"; fi) "\"$PROTONDIR$VERSION/proton\"" run "$(if [ "$ISPATH" = "1" ]; then echo "\"$FILE\"${@#$1}"; else echo "\"$1\"${@#$1}"; fi)"
+#echo
 
+env STEAM_COMPAT_DATA_PATH="$COMPDIR/$COMPATDIR" env STEAM_COMPAT_CLIENT_INSTALL_PATH="$COMPDIR" $(if [ "$DXVK" = "0" ]; then echo "env PROTON_USE_WINED3D=1"; fi) $(if [ "$D3D10" = "0" ]; then echo "env PROTON_NO_D3D10=1"; fi) $(if [ "$D3D11" = "0" ]; then echo "env PROTON_NO_D3D11=1"; fi) $(if [ "$FSYNC" = "0" ]; then echo "env PROTON_NO_FSYNC=1"; fi) $(if [ "$ESYNC" = "0" ]; then echo "env PROTON_NO_ESYNC=1"; fi) $(if [ ! "$GAMEMODE" = "0" ]; then echo "gamemoderun"; fi) $(if [ "$MANGOHUD" = "1" ]; then echo "mangohud"; fi) $(if [ "$MANGOHUD" = "2" ]; then echo "mangohud --dlsym"; fi) "$PROTONDIR$VERSION/proton" run "$(if [ "$ISPATH" = "1" ]; then echo "$FILE${@#$1}"; else echo "$@"; fi)"
 
